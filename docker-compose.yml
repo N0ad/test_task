@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    image: fastapi-image-processor:latest
+    container_name: fastapi-image-processor
+    env_file: .env
+    environment:
+      - PORT=${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./images:/app/images
+      - ./logs:/app/logs
+    restart: unless-stopped

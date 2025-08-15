@@ -1,28 +1,55 @@
 # FastAPI Image Processor
 
-A lFastAPI application for uploading and processing images. This API allows users to upload JPEG or PNG images (up to 5 MB), store them temporarily in memory, and convert them to grayscale upon request. The processed grayscale image is saved to the filesystem and returned to the user, with the original image removed from memory after processing.
+A FastAPI application for uploading and processing images. This API allows users to upload JPEG or PNG images (up to 5 MB), store them temporarily in memory, and convert them to grayscale upon request. The processed grayscale image is saved to the filesystem and returned to the user, with the original image removed from memory after processing.
 
 ## Requirements
-- Python 3.10+
-- FastAPI (`pip install fastapi`)
-- Uvicorn (`pip install uvicorn`)
-- Pillow (`pip install pillow`)
-- python-multipart (`pip install python-multipart`)
+- Docker
+- Docker Compose
 
-## Installation
-1. Clone or download the repository.
-2. Install dependencies:
+## Installation (Docker)
+1. **Clone the Repository**:
    ```bash
-   pip install fastapi uvicorn pillow python-multipart
+   git clone https://github.com/<your-username>/<your-repo-name>.git
+   cd <your-repo-name>
    ```
-3. Ensure the `images` and `logs` directories are writable (they will be created automatically if they don't exist).
 
-## Running the Application
-Run the FastAPI server locally with auto-reload for development:
-```bash
-uvicorn main:app --reload
-```
-The API will be available at `http://127.0.0.1:8000`.
+2. **Install Docker and Docker Compose**
+
+## Running the Application (Docker)
+### Option 1: Using Docker Compose
+1. **Build the Docker Image**:
+   Build the Docker image using Docker Compose:
+   ```bash
+   docker-compose build
+   ```
+
+2. **Run the Application**:
+   Start the application using Docker Compose:
+   ```bash
+   docker-compose up -d
+   ```
+   - The `-d` flag runs the container in detached mode (in the background).
+   - The API will be available at `http://localhost:5000` (or the port specified in the `.env` file).
+
+### Option 2: Using Docker Run
+1. **Build the Docker Image**:
+   Build the Docker image manually:
+   ```bash
+   docker build -t fastapi-image-processor:latest .
+   ```
+
+2. **Run the Application**:
+   Start the container using the `docker run` command:
+   ```bash
+   docker run -d --name fastapi-image-processor --env-file .env -p 5000:5000 -v "$(pwd)/images:/app/images" -v "$(pwd)/logs:/app/logs" --restart unless-stopped fastapi-image-processor:latest
+   ```
+   - The `-d` flag runs the container in detached mode.
+   - The `--env-file .env` loads environment variables from the `.env` file.
+   - The `-p 5000:5000` maps port 5000 on the host to port 5000 in the container.
+   - The `-v "$(pwd)/images:/app/images"` and `-v "$(pwd)/logs:/app/logs"` mount the local `images` and `logs` directories to the container.
+   - The `--restart unless-stopped` ensures the container restarts automatically unless explicitly stopped.
+   - The API will be available at `http://localhost:5000` (or the port specified in the `.env` file).
+
 
 ## API Endpoints
 - **POST /upload**
@@ -34,7 +61,7 @@ The API will be available at `http://127.0.0.1:8000`.
     - `413`: File exceeds 5 MB limit.
   - **Example**:
     ```bash
-    curl -X POST -F "file=@image.jpg" http://127.0.0.1:8000/upload
+    curl -X POST -F "file=@image.jpg" http://localhost:5000/upload
     ```
     Response:
     ```json
@@ -52,7 +79,7 @@ The API will be available at `http://127.0.0.1:8000`.
     - `400`: Processing failed.
   - **Example**:
     ```bash
-    curl http://127.0.0.1:8000/process?image_id=abc123... --output grayscale.png
+    curl http://localhost:5000/process?image_id=abc123... --output grayscale.png
     ```
 
 - **GET /ping**
@@ -60,5 +87,5 @@ The API will be available at `http://127.0.0.1:8000`.
   - **Response**: `{"status": "ok"}`
   - **Example**:
     ```bash
-    curl http://127.0.0.1:8000/ping
+    curl http://localhost:5000/ping
     ```
