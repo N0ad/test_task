@@ -9,8 +9,8 @@ A FastAPI application for uploading and processing images. This API allows users
 ## Installation (Docker)
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/<your-username>/<your-repo-name>.git
-   cd <your-repo-name>
+   git clone https://github.com/N0ad/test_task
+   git checkout task_5
    ```
 
 2. **Install Docker and Docker Compose**
