@@ -11,6 +11,10 @@ A lFastAPI application for uploading and processing images. This API allows user
 
 ## Installation
 1. Clone or download the repository.
+   ```bash
+   git clone https://github.com/N0ad/test_task
+   git checkout task_1
+   ```
 2. Install dependencies:
    ```bash
    pip install fastapi uvicorn pillow python-multipart
